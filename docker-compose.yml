@@ -1,0 +1,12 @@
+services:
+  deathreport-frontend:
+    build:
+      context: .
+      args:
+        - NEXT_PUBLIC_apiurl=http://192.168.9.227:3002/api/v1
+    ports:
+      - "3003:3000"
+    env_file:
+      - ".env"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

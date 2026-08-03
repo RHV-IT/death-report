@@ -1,0 +1,52 @@
+"use client"
+
+import { useTheme } from "@/components/theme-provider"
+import { Toaster as Sonner, type ToasterProps } from "sonner"
+import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
+
+const Toaster = ({ ...props }: ToasterProps) => {
+  const { theme = "system" } = useTheme()
+
+  return (
+    <Sonner
+      theme={theme as ToasterProps["theme"]}
+      className="toaster group"
+      icons={{
+        success: (
+          <CircleCheckIcon className="size-4 text-emerald-600 dark:text-emerald-400" />
+        ),
+        info: (
+          <InfoIcon className="size-4 text-primary" />
+        ),
+        warning: (
+          <TriangleAlertIcon className="size-4 text-amber-600 dark:text-amber-400" />
+        ),
+        error: (
+          <OctagonXIcon className="size-4 text-destructive" />
+        ),
+        loading: (
+          <Loader2Icon className="size-4 animate-spin text-muted-foreground" />
+        ),
+      }}
+      style={
+        {
+          "--normal-bg": "var(--popover)",
+          "--normal-text": "var(--popover-foreground)",
+          "--normal-border": "var(--border)",
+          "--border-radius": "var(--radius-lg)",
+        } as React.CSSProperties
+      }
+      toastOptions={{
+        classNames: {
+          toast:
+            "font-sans shadow-lg ring-1 ring-black/[0.03] dark:ring-white/[0.05]",
+          title: "font-semibold",
+          description: "text-muted-foreground",
+        },
+      }}
+      {...props}
+    />
+  )
+}
+
+export { Toaster }
