@@ -8,6 +8,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Calendar,
@@ -18,6 +19,7 @@ import {
   Users,
   Search,
   AlertCircle,
+  Pencil,
 } from "lucide-react";
 import { RiskGradingBadge } from "@/components/ui/risk-badge";
 import type { DeathReport } from "@/lib/types";
@@ -31,6 +33,7 @@ import {
 interface DeathReportDetailsProps {
   report: DeathReport | null;
   onClose: () => void;
+  onEdit: (report: DeathReport) => void;
 }
 
 function formatDateValue(value: string): string {
@@ -96,7 +99,7 @@ function SectionCard({
   );
 }
 
-export function DeathReportDetails({ report, onClose }: DeathReportDetailsProps) {
+export function DeathReportDetails({ report, onClose, onEdit }: DeathReportDetailsProps) {
   if (!report) return null;
 
   return (
@@ -111,7 +114,19 @@ export function DeathReportDetails({ report, onClose }: DeathReportDetailsProps)
                   Death Report #{report.id}
                 </DialogTitle>
               </div>
-              <RiskGradingBadge riskGrading={report.riskGrading || ""} />
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEdit(report)}
+                  className="h-8 gap-1.5"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  Edit
+                </Button>
+                <RiskGradingBadge riskGrading={report.riskGrading || ""} />
+              </div>
             </div>
             <DialogDescription className="mt-1 text-sm text-muted-foreground">
               Reference: <strong className="text-foreground">{report.ref}</strong> · Department:{" "}

@@ -8,12 +8,14 @@ import { Search, X } from "lucide-react";
 import type { DeathReport } from "@/lib/types";
 import { DeathReportTable } from "./DeathReportTable";
 import { DeathReportDetails } from "./DeathReportDetails";
+import { DeathReportEditDialog } from "./DeathReportEditDialog";
 import { useDeathReportsQuery, useSearchDeathReportsQuery } from "@/lib/api/hooks/use-death-report";
 
 export default function DeathReportsPage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedReport, setSelectedReport] = useState<DeathReport | null>(null);
+  const [editingReport, setEditingReport] = useState<DeathReport | null>(null);
 
   const listQuery = useDeathReportsQuery({ page: currentPage });
   const searchQueryTrimmed = searchQuery.trim();
@@ -98,7 +100,23 @@ export default function DeathReportsPage() {
         </CardContent>
       </Card>
 
-      <DeathReportDetails report={selectedReport} onClose={() => setSelectedReport(null)} />
+      <DeathReportDetails
+        report={selectedReport}
+        onClose={() => setSelectedReport(null)}
+        onEdit={(report) => {
+          setSelectedReport(null);
+          setEditingReport(report);
+        }}
+      />
+
+      <DeathReportEditDialog
+        report={editingReport}
+        onClose={() => setEditingReport(null)}
+        onUpdated={(updated) => {
+          setEditingReport(null);
+          setSelectedReport(updated);
+        }}
+      />
     </div>
   );
 }
