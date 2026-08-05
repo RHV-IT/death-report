@@ -208,6 +208,7 @@ const baseUrl = process.env.NEXT_PUBLIC_apiurl;
 | PUT | `/deathreport` | No | Update an existing death report (public endpoint) |
 | GET | `/deathreports?page=N&limit=10` | Yes | Fetch paginated death report list (returns `{ deathReports: { data, pagination } }`) |
 | GET | `/searchDeathReport?searchQuery=...` | Yes | Search death reports (returns `{ deathReports: [...] }`) |
+| GET | `/searchDeathReport?searchQuery=...&dateFrom=YYYY-MM-DD&dateTo=YYYY-MM-DD` | Yes | Search death reports bounded by `reported_date` (both date params required for the window to apply) |
 | GET | `/user?email={email}` | Yes (Super Admin) | Search user by email |
 | PUT | `/auth/enable` | Yes (Super Admin) | Enable user account |
 | PUT | `/auth/disable` | Yes (Super Admin) | Disable user account |

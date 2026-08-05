@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api/client";
-import { queryKeys, type DeathReportFilters } from "@/lib/api/query-keys";
+import { queryKeys, type DeathReportFilters, type DeathReportSearchFilters } from "@/lib/api/query-keys";
 import type { DeathReportsResponse, DeathReportsSearchResponse } from "@/lib/types";
 import type { DeathReportValues } from "@/lib/schemas/death-report";
 
@@ -33,15 +33,27 @@ export function useDeathReportsAnalyticsQuery() {
   });
 }
 
-export function useSearchDeathReportsQuery(searchQuery: string) {
-  const query = searchQuery.trim();
+export function useSearchDeathReportsQuery(filters: DeathReportSearchFilters) {
+  const query = filters.query.trim();
+  const hasQuery = query.length > 0;
+  // The backend only applies date bounds when both `dateFrom` and `dateTo` are
+  // set, and only on the search route. A date-only filter (no text query) would
+  // otherwise fall through to the list route, which ignores date params and
+  // returns an empty body. Sending `%` as the query uses the documented ILIKE
+  // wildcard behaviour to match every row within the date window.
+  const hasDate = Boolean(filters.dateFrom && filters.dateTo);
+  const effectiveQuery = hasQuery ? query : hasDate ? "%" : "";
   return useQuery({
-    queryKey: queryKeys.deathReports.search(query),
-    queryFn: () =>
-      apiFetch<DeathReportsSearchResponse>(
-        `/searchDeathReport?searchQuery=${encodeURIComponent(query)}`
-      ),
-    enabled: query.length > 0,
+    queryKey: queryKeys.deathReports.search(filters),
+    queryFn: () => {
+      const params = new URLSearchParams({ searchQuery: effectiveQuery });
+      if (filters.dateFrom) params.set("dateFrom", filters.dateFrom);
+      if (filters.dateTo) params.set("dateTo", filters.dateTo);
+      return apiFetch<DeathReportsSearchResponse>(
+        `/searchDeathReport?${params.toString()}`
+      );
+    },
+    enabled: effectiveQuery.length > 0,
     placeholderData: (previousData) => previousData,
   });
 }

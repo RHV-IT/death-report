@@ -12,6 +12,12 @@ export interface DeathReportFilters {
   category?: string;
 }
 
+export interface DeathReportSearchFilters {
+  query: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
 export const queryKeys = {
   incidents: {
     all: ["incidents"] as const,
@@ -21,7 +27,8 @@ export const queryKeys = {
   deathReports: {
     all: ["deathReports"] as const,
     list: (filters: DeathReportFilters) => ["deathReports", "list", filters] as const,
-    search: (query: string) => ["deathReports", "search", query] as const,
+    search: (filters: DeathReportSearchFilters) =>
+      ["deathReports", "search", filters] as const,
   },
   management: {
     detail: (incidentId: number) => ["management", incidentId] as const,

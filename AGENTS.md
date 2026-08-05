@@ -135,6 +135,7 @@ NEXT_PUBLIC_apiurl=http://localhost:3002/api/v1
 - `PUT /deathreport` - Update an existing death report (no auth required)
 - `GET /deathreports?page=${page}&limit=10` - Paginated death report list
 - `GET /searchDeathReport?searchQuery=${query}` - Search death reports
+- `GET /searchDeathReport?searchQuery=${query}&dateFrom=${from}&dateTo=${to}` - Search death reports bounded by `reported_date` (both date params required)
 - `GET /user?email=${email}` - Search user by email (Super Admin)
 - `PUT /auth/enable` - Enable user account
 - `PUT /auth/disable` - Disable user account
